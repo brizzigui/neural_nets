@@ -97,7 +97,7 @@ def backpropagate(network: list[list[Neuron]], expected: list) -> None:
             for j in range(len(layer)):
                 neuron = layer[j]
                 network[i][j].error = (neuron.output - expected[j])  * sigmoid_prime(network[i][j].output)
-                
+
 
 def update_weights(network: list[list[Neuron]], values: list, learning_rate: float) -> None:
     ''' Atualiza os pesos da rede, fazendo descida de gradiente '''
@@ -179,7 +179,6 @@ def get_basic_sine_dataset() -> list:
 
 def get_advanced_sine_dataset() -> list:
     return [[[i/100],[math.sin(i/100)]] for i in range(314)]
-
 
 def main() -> None:
     basic_sine_dataset = get_basic_sine_dataset()
