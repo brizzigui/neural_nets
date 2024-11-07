@@ -2,7 +2,7 @@ import random
 import math
 
 class Neuron:
-    # classe que representa cada neuronio
+    ''' Classe que representa cada neurônio '''
     def __init__(self, weights, bias):
         self.weights = weights
         self.bias = bias
@@ -15,6 +15,7 @@ class Neuron:
 
 
 def create_network(n_layers: int, layers_sizes: list) -> list:
+    ''' Cria rede neural '''
     
     network = []
 
@@ -48,15 +49,22 @@ def create_network(n_layers: int, layers_sizes: list) -> list:
     return network
 
 def sigmoid(v: float) -> float:
+    ''' Função de ativação sigmoide '''
+
     # v is the pure output
     return 1.0 / (1.0 + math.exp(-v))
 
 def sigmoid_prime(v: float) -> float:
+    ''' Derivada da função de ativação sigmoide (recebe sigmoid(linearcombination) como argumento)'''
+
+
     # v is the sigmoided output
     return v * (1.0 - v)
 
 
 def forward(network: list[list[Neuron]], values: list) -> None:
+    ''' Faz propagação da ativação '''
+
     for j in range(len(network[0])):
         network[0][j].output = values[j]
 
@@ -70,6 +78,8 @@ def forward(network: list[list[Neuron]], values: list) -> None:
 
 
 def backpropagate(network: list[list[Neuron]], expected: list) -> None:
+    ''' Faz backpropagation do erro '''
+
     for i in reversed(range(len(network))):
         layer = network[i]
         errors = []
@@ -91,6 +101,9 @@ def backpropagate(network: list[list[Neuron]], expected: list) -> None:
             neuron.error = errors[j] * sigmoid_prime(neuron.output)
 
 def update_weights(network: list[list[Neuron]], values: list, learning_rate: float) -> None:
+    ''' Atualiza os pesos da rede, fazendo descida de gradiente '''
+
+
     for i in range(1, len(network)):
         values = [neuron.output for neuron in network[i-1]]
 
@@ -102,6 +115,8 @@ def update_weights(network: list[list[Neuron]], values: list, learning_rate: flo
                 
 
 def print_network(network: list) -> None:
+    ''' Imprime a rede de maneira formatada '''
+
     for l_idx, layer in enumerate(network):
         print(f"----- Camada #{l_idx} -----")
         for n_idx, neuron in enumerate(layer):
@@ -109,9 +124,13 @@ def print_network(network: list) -> None:
         print()
 
 def get_propagation_output(network) -> list:
+    ''' Retorna saídas da rede '''
+
     return [network[-1][j].output for j in range(len(network[-1]))]
 
 def train(network: list[list[Neuron]], dataset: list, learning_rate: float, n_epoch: int) -> list[list[Neuron]]:
+    ''' Comanda o treino da rede '''
+
     for epoch in range(n_epoch):
         error_acc = 0
         for point in dataset:
@@ -130,6 +149,8 @@ def train(network: list[list[Neuron]], dataset: list, learning_rate: float, n_ep
     return network
 
 def use(network: list[list[Neuron]], is_sine_test: bool) -> None:
+    ''' Função permite que o usuário use a rede treinada, vendo suas saídas '''
+
     print("Vamos usar nossa rede treinada!")
     while True:
         print("-------------------------------")

@@ -1,6 +1,26 @@
 // Demo da propagação de uma rede neural
 // Os valores são inicializados aleatóriamente
 
+/*
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    AVISO!!!!!!!!
+    CÓDIGO NAO FUNCIONAL
+
+
+
+    AVISO!!!!!!!!
+    CÓDIGO NAO FUNCIONAL
+
+
+
+    AVISO!!!!!!!!
+    CÓDIGO NAO FUNCIONAL
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
+
 #include <iostream>
 #include <vector>
 #include <math.h>
