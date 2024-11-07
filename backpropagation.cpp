@@ -118,10 +118,10 @@ network_t propagate(network_t network)
     {
         for (size_t n = 0; n < network[l].size(); n++)
         {
-            double acc = 0;
+            double acc = network[l][n].bias;
             for (size_t origin = 0; origin < network[l-1].size(); origin++)
             {
-                acc += (network[l-1][origin].value_out * network[l][n].weight[origin] + network[l][n].bias);
+                acc += (network[l-1][origin].value_out * network[l][n].weight[origin]);
             }
 
             network[l][n].value_comb = acc;
@@ -160,6 +160,7 @@ network_t backpropagate(network_t network, matrix_t in, matrix_t out, double lea
 {
     // this function handles the backpropagation algorithm
 
+
     // initializes error of every layer with 0.0
     for (size_t l = 0; l < network.size(); l++)
     {
@@ -170,7 +171,8 @@ network_t backpropagate(network_t network, matrix_t in, matrix_t out, double lea
     }
     
     for (int ex = 0; ex < in.size(); ex++)
-    {      
+    { 
+         
         for (size_t j = 0; j < network[0].size(); j++)
         {
             network[0][j].value_out = in[ex][j];
@@ -186,13 +188,13 @@ network_t backpropagate(network_t network, matrix_t in, matrix_t out, double lea
 
             double diff = (actual-expected);
 
-            network[network.size()-1][j].error += diff * sigmoid_dif(network[network.size()-1][j].value_out);
+            network[network.size()-1][j].error += diff * sigmoid_dif(network[network.size()-1][j].value_comb);
         }
 
 
         // calculates error for every remaining layer, backpropagating
         // for every layer (excluding input (not needed) and output (already computed))
-        for (size_t l = network.size()-2; l > 0; l--)
+        for (int l = network.size()-2; l >= 0; l--)
         {
             // for every neuron in the smaller layer
             for (size_t k = 0; k < network[l].size(); k++)
@@ -203,8 +205,8 @@ network_t backpropagate(network_t network, matrix_t in, matrix_t out, double lea
                 {
                     sum += network[l+1][j].weight[k] * network[l+1][j].error;
                 }
-
-                network[l][k].error += sum * sigmoid_dif(network[l][k].value_out);
+                
+                network[l][k].error += sum * sigmoid_dif(network[l][k].value_comb);
             }
         }
     }
@@ -230,15 +232,12 @@ network_t backpropagate(network_t network, matrix_t in, matrix_t out, double lea
         // for every neuron in the bigger layer
         for (size_t j = 0; j < network[l].size(); j++)
         {
-            // for every neuron in the smaller layer
-            for (size_t k = 0; k < network[l-1].size(); k++)
-            {
-                double delta = network[l][j].error * sigmoid_dif(network[l][j].value_comb);
-                network[l][j].bias -= learning_rate * delta;
-            }
+            double delta = network[l][j].error * sigmoid_dif(network[l][j].value_comb);
+            network[l][j].bias -= learning_rate * delta;
         }
     }
     
+
 
     return network;
 }
