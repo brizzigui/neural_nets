@@ -91,14 +91,13 @@ def backpropagate(network: list[list[Neuron]], expected: list) -> None:
                     error += neuron.weights[j] * neuron.error
                 errors.append(error)
 
+                network[i][j].error = error * sigmoid_prime(network[i][j].output)
+
         else:
             for j in range(len(layer)):
                 neuron = layer[j]
-                errors.append(neuron.output - expected[j])  
-
-        for j in range(len(layer)):
-            neuron = layer[j]
-            neuron.error = errors[j] * sigmoid_prime(neuron.output)
+                network[i][j].error = (neuron.output - expected[j])  * sigmoid_prime(network[i][j].output)
+                
 
 def update_weights(network: list[list[Neuron]], values: list, learning_rate: float) -> None:
     ''' Atualiza os pesos da rede, fazendo descida de gradiente '''
@@ -168,8 +167,8 @@ def use(network: list[list[Neuron]], is_sine_test: bool) -> None:
             print(f"Resultado previsto = {answer}")
 
 
-def main() -> None:
-    sine_dataset = [
+def get_basic_sine_dataset() -> list:
+    return [
         [[0],[math.sin(0)]],
         [[math.pi/4],[math.sin(math.pi/4)]],
         [[math.pi/2],[math.sin(math.pi/2)]],
@@ -177,10 +176,19 @@ def main() -> None:
         [[math.pi],[math.sin(math.pi)]]
     ]
 
+
+def get_advanced_sine_dataset() -> list:
+    return [[[i/100],[math.sin(i/100)]] for i in range(314)]
+
+
+def main() -> None:
+    basic_sine_dataset = get_basic_sine_dataset()
+    sine_dataset = get_advanced_sine_dataset()
+
     dataset = sine_dataset
 
     network = create_network(3, [1, 8, 1])
-    network = train(network, dataset, 0.5, 20000)
+    network = train(network, dataset, 0.25, 1000)
 
     use(network, True)
 
