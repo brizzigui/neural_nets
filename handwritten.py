@@ -1,4 +1,3 @@
-from calendar import Day
 import struct
 import sys
 
@@ -56,6 +55,13 @@ def use_from_file(network: list, file_path: str, actual: int) -> None:
     print(answer)
     print()
 
+def use_loop(network) -> None:
+    while True:
+        try:
+            use_from_file(network, input(), "None")
+        except:
+            print("Inválido. Tente novamente.")
+
 def main() -> None:
     dataset = get_digits_dataset()
 
@@ -68,7 +74,10 @@ def main() -> None:
     use_from_file(network, "./images/test/one_0.bmp", 1)
     use_from_file(network, "./images/test/two_0.bmp", 2)
     use_from_file(network, "./images/test/three_0.bmp", 3)
+    use_from_file(network, "./images/test/ana.bmp", 3)
+    use_from_file(network, "./images/test/ana_1.bmp", 1)
 
+    use_loop(network)
 
 
 
