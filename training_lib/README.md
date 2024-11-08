@@ -24,7 +24,7 @@ Para criar uma rede use:
 ``` python
 import mind
 
-network = mind.create_network(n_layers=NUMERO_DE_CAMADAS,   layers_sizes=LISTA_DOS_TAMANHOS)
+network = mind.create_network(n_layers=NUMERO_DE_CAMADAS, layers_sizes=LISTA_DOS_TAMANHOS)
 ```
 
 A ```LISTA_DOS_TAMANHOS``` terá de ter o mesmo tamanho que o ```NUMERO_DE_CAMADAS```.
