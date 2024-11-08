@@ -1,5 +1,6 @@
 import struct
 import sys
+import random
 
 import backpropagation as mind
 
@@ -22,7 +23,10 @@ def get_digits_dataset() -> list:
         expected = [0] * 4
         expected[i] = 1
 
-        for k in range(15):
+        pos = [k for k in range(15)]
+        random.shuffle(pos)
+
+        for k in range(50):
             path = f"./images/{i}/{k}.bmp"
             dataset.append([read_bmp(path), expected])
 
@@ -56,17 +60,46 @@ def use_from_file(network: list, file_path: str, actual: int) -> None:
     print()
 
 def use_loop(network) -> None:
+    print("Insira o nome de um arquivo ou digite /quit para sair.")
+    print("Os comandos 'from [path]' e 'back' são usados para trocar de diretório base.")
+
+    path = ""
     while True:
         try:
-            use_from_file(network, input(), "None")
-        except:
-            print("Inválido. Tente novamente.")
+            if path == "":
+                option = input("> ")
+            else:
+                option = input(f">{path}")
+            
+            if option == "/quit":
+                return
+            
+            elif option[0:4] == "from":
+                path = option[4:].strip()
+
+            elif option[0:4] == "back":
+                path = ""
+
+            else:
+                actual_path = path + option
+                print(actual_path)
+                use_from_file(network, actual_path, "None")
+
+        except FileNotFoundError:
+            print("Inválido. Tente novamente ou use /quit para sair.")
 
 def main() -> None:
+    print("Demo de treinamento de rede neural para reconhecimento de dígitos\n")
+
+    print("Lendo dados.")
     dataset = get_digits_dataset()
 
+    print("Criando rede.")
     network = mind.create_network(4, [900, 100, 100, 4])
-    network = mind.train(network, dataset, 0.1, 30)
+
+    print("Treinando rede.")
+    print("---------------\n")
+    network = mind.train(network, dataset, 0.002, 500)
 
     print()
 
@@ -74,8 +107,6 @@ def main() -> None:
     use_from_file(network, "./images/test/one_0.bmp", 1)
     use_from_file(network, "./images/test/two_0.bmp", 2)
     use_from_file(network, "./images/test/three_0.bmp", 3)
-    use_from_file(network, "./images/test/ana.bmp", 3)
-    use_from_file(network, "./images/test/ana_1.bmp", 1)
 
     use_loop(network)
 
