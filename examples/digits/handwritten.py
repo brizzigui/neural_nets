@@ -109,7 +109,7 @@ def main() -> None:
 
     print("Treinando rede.")
     print("---------------\n")
-    network = mind.train(network, dataset, learning_rate=0.002, n_epoch=500)
+    network = mind.train(network, dataset, learning_rate=0.002, n_epoch=300)
 
     print()
 
