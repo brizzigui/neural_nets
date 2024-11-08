@@ -1,17 +1,27 @@
-import struct
-import sys
-import random
+'''
+    Código para treinamento de rede neural de reconhecimento de dígitos.
+    
+    Dataset atual e configuração treinam para reconhecer (0, 1, 2, 3).
 
-import backpropagation as mind
+    Não necessita de bibliotecas auxiliares.
+    Necessita do arquivo mind.py, que contém as funções de treinamento.
+'''
+
+import random
+import mind
 
 def read_bmp(path: str) -> list:
     pixel_values = []
 
     with open(path, "rb") as file:
+        # Lê 54 bytes e ignora o retorno para pular o header
         file.read(54)
 
         for _ in range(900):
-            pixel_values.append((int.from_bytes(file.read(1))/(255)+int.from_bytes(file.read(1))/(255)+int.from_bytes(file.read(1))/(255))/3)
+            r = int.from_bytes(file.read(1))/(255)
+            g = int.from_bytes(file.read(1))/(255)
+            b = int.from_bytes(file.read(1))/(255)
+            pixel_values.append((r+g+b)/3)
 
     return pixel_values
 
@@ -95,11 +105,11 @@ def main() -> None:
     dataset = get_digits_dataset()
 
     print("Criando rede.")
-    network = mind.create_network(4, [900, 100, 100, 4])
+    network = mind.create_network(n_layers=4, layers_sizes=[900, 100, 100, 4])
 
     print("Treinando rede.")
     print("---------------\n")
-    network = mind.train(network, dataset, 0.002, 500)
+    network = mind.train(network, dataset, learning_rate=0.002, n_epoch=500)
 
     print()
 

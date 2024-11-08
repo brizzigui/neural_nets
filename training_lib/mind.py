@@ -1,3 +1,55 @@
+'''
+    Módulo para criação, manipulação e treinamento de redes neurais
+
+    Exemplo de uso:
+
+    seja X = [x1, x2, x3, ..., xn] um conjunto de n entradas
+    seja Y = [y1, y2, y3, ..., yn] um conjunto de n saídas
+
+    Um dataset será:
+
+    dataset =   [
+                    [x1, y1],
+                    [x2, y2],
+                    [x3, y3]
+                ]
+
+    em que xn e yn são listas de tamanho igual ao tamanho da camada de entrada 
+    e o tamanho da camada de saída, respectivamente
+
+    
+
+    Para criar uma rede use:
+
+        network = mind.create_network(n_layers=NUMERO_DE_CAMADAS, layers_sizes=LISTA_DOS_TAMANHOS)
+
+    A LISTA_DOS_TAMANHOS terá de ter o mesmo tamanho que o NUMERO_DE_CAMADAS
+
+    
+
+    Para treinar, use: 
+
+        network = mind.train(network, dataset, learning_rate=TAXA_APRENDIZADO, n_epoch=NUMERO_EPOCAS)
+
+    em que a TAXA_APRENDIZADO é um valor para o passo de aprendizado (preferivelmente menor que 1 e maior que 10^-6)
+    e o número de épocas é um valor para as iterações realizadas (preferivelmente maior que 10 e menor que 1000).
+
+
+    Para usar a rede treinada, use:
+
+
+        mind.forward(network, ENTRADA)
+
+
+    em que a ENTRADA é a lista de valores de entrada
+    e obtenha a saída com:
+
+        answer = mind.get_propagation_output(network)
+        print(answer)
+
+'''
+
+
 import random
 import math
 
@@ -146,51 +198,3 @@ def train(network: list[list[Neuron]], dataset: list, learning_rate: float, n_ep
         print(f"> Epoch #{epoch:02d} - error = {error_acc}")
 
     return network
-
-def use(network: list[list[Neuron]], is_sine_test: bool) -> None:
-    ''' Função permite que o usuário use a rede treinada, vendo suas saídas '''
-
-    print("Vamos usar nossa rede treinada!")
-    while True:
-        print("-------------------------------")
-        v = [*map(float, input("Digite uma entrada: ").split())]
-
-        forward(network, v)
-        answer = get_propagation_output(network)
-
-        if is_sine_test:
-            print(f"Resultado previsto = {answer[0]}")
-            print(f"Resultado esperado = {math.sin(v[0])}")
-            print(f"Diferença absoluta = {abs(math.sin(v[0]) - answer[0])}")
-
-        else:
-            print(f"Resultado previsto = {answer}")
-
-
-def get_basic_sine_dataset() -> list:
-    return [
-        [[0],[math.sin(0)]],
-        [[math.pi/4],[math.sin(math.pi/4)]],
-        [[math.pi/2],[math.sin(math.pi/2)]],
-        [[3*math.pi/4],[math.sin(3*math.pi/4)]],
-        [[math.pi],[math.sin(math.pi)]]
-    ]
-
-
-def get_advanced_sine_dataset() -> list:
-    return [[[i/100],[math.sin(i/100)]] for i in range(314)]
-
-def main() -> None:
-    basic_sine_dataset = get_basic_sine_dataset()
-    sine_dataset = get_advanced_sine_dataset()
-
-    dataset = sine_dataset
-
-    network = create_network(3, [1, 8, 1])
-    network = train(network, dataset, 0.25, 1000)
-
-    use(network, True)
-
-
-if __name__ == "__main__":
-    main()
